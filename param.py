@@ -12,7 +12,7 @@ class Param:
         self.imu_timestep = 1./self.imu_frequency #时间间隔计算方式，0.01s
         self.cam_timestep = 1./self.cam_frequency
         self.t_start = 0.0 # 时间起始时间，０
-        self.t_end = 20  # 持续时间
+        self.t_end = 15  # 持续时间
 
         # noise
         self.gyro_bias_sigma = 1.0e-5; # 陀螺仪偏置的标准差
@@ -44,3 +44,11 @@ class Param:
 
         # visualize;
         self.if_visualize = True
+
+        # path generating param;
+        self.a = 1
+        self.b = 1
+        self.c = 2
+        self.d = 3
+        self.m = 1
+        self.n = -1

@@ -24,40 +24,80 @@ def generate_points():
         if (param.if_visualize):
             plt.plot(x, y)
     if (param.if_visualize):
-        plt.gca().invert_xaxis()
+        #plt.gca().invert_xaxis()
         plt.axes().set_aspect('equal')
         #plt.show()
+
+def visulizemotions(motiondatas):
+    size_motions = len(motiondatas)
+    xys = np.zeros([size_motions, 2])
+    thetas = np.zeros([size_motions, 1])
+
+    for i in range(size_motions):
+        motiondata = motiondatas[i]
+        xys[i, 0] = motiondata.twb[0]
+        xys[i, 1] = motiondata.twb[1]
+        thetas[i] = motiondata.theta
+
+    plt.scatter(xys[:,0], xys[:,1])
+    plt.show()
+
+    plt.figure(1)
+    plt.plot(thetas)
+    plt.show()
+
+    #
 
 def generate_path():
     param = Param()
     # parameters;
-    a = 1
-    b = 1
-    c = 2
-    d = 3
-    x_start = -12
-    x_end = 2
+    a = param.a
+    b = param.b
+    c = param.c
+    d = param.d
+    m = param.m
+    n = param.n
     xs = []
     ys = []
-    step = 0.1
-    x = x_start
-    while (x < x_end):
+    t = param.t_start
+    motiondatas = []
+    while (t < param.t_end):
+        # position;
+        x = m*(t + n)
         y = c * np.sin(a * x + b) + d
         xs.append(x)
         ys.append(y)
-        x += step
-    xs = np.asarray(xs)
-    ys = np.asarray(ys)
-    if (param.if_visualize):
-        #plt.figure(1)
-        #plt.hold(True)
-        plt.scatter(ys, xs)
-        plt.show()
+        # 速度
+        xprim = m
+        yprim = a*c*m*np.cos(a*x+b)
 
-def
+        # 加速度
+        xprimprim = 0
+        yprimprim = -a*a*c*m*m*np.sin(a*x+b)
+
+        #角速度
+        k = a*c*np.cos(a*x+b)
+        theta = np.arctan(k)
+        thetaprim = -1.0/(1+k*k)*a*a*c*m*np.sin(a*x + b)
+
+        motiondata = MotionData(t)
+        motiondata.setT(x, y)
+        motiondata.setPose(theta)
+        motiondata.setVelocity(xprim, yprim)
+        motiondata.setAcc(xprimprim, yprimprim)
+        motiondata.setGyro(thetaprim)
+        motiondatas.append(motiondata)
+        t += param.imu_timestep
+
+    visulizemotions(motiondatas)
+
+# def testing_path():
+#     #
 
 if __name__ == '__main__':
     generate_points()
     generate_path()
+    #testing_path()
+    #generate_camobs()
 
 
