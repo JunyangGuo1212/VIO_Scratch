@@ -1,4 +1,5 @@
-clear;
+% param
+if_plot = false;
 % 定义结构体
 param.a = 1;
 param.b = 1;
@@ -52,9 +53,10 @@ while (t_time < param.t_end)
     motiondatas = cat(1, motiondatas, motiondata);
     t_time = param.imu_timestep + t_time;
 end
-
-visualize(motiondatas);
-save('sinmotiondata','motiondatas');
+if if_plot
+    visualize(motiondatas);
+end
+save('data/sinmotiondata','motiondatas');
 data2d = transformate(motiondatas);
-save('sinmotiondata2d','data2d');
+save('data/sinmotiondata2d','data2d');
 %visulizemotions(motiondatas)
